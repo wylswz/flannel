@@ -38,6 +38,7 @@ import (
 	"github.com/flannel-io/flannel/subnet"
 	"github.com/flannel-io/flannel/subnet/etcdv2"
 	"github.com/flannel-io/flannel/subnet/kube"
+	"github.com/flannel-io/flannel/subnet/libvirt"
 	"github.com/flannel-io/flannel/version"
 	log "k8s.io/klog"
 
@@ -81,6 +82,7 @@ type CmdLineOpts struct {
 	help                   bool
 	version                bool
 	kubeSubnetMgr          bool
+	libvirtSubnetMgr       bool
 	kubeApiUrl             string
 	kubeAnnotationPrefix   string
 	kubeConfigFile         string
@@ -163,6 +165,10 @@ func usage() {
 func newSubnetManager(ctx context.Context) (subnet.Manager, error) {
 	if opts.kubeSubnetMgr {
 		return kube.NewSubnetManager(ctx, opts.kubeApiUrl, opts.kubeConfigFile, opts.kubeAnnotationPrefix, opts.netConfPath)
+	}
+
+	if opts.libvirtSubnetMgr {
+		return libvirt.NewSubnetManager(ctx, "")
 	}
 
 	cfg := &etcdv2.EtcdConfig{

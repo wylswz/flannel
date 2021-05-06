@@ -10,8 +10,8 @@ import (
 type libvirtSubnetManager struct {
 }
 
-func NewSubnetManager(libvirtSock string) subnet.Manager {
-	return newLibvirtSubnetManager(libvirtSock)
+func NewSubnetManager(ctx context.Context, libvirtSock string) (subnet.Manager, error) {
+	return newLibvirtSubnetManager(libvirtSock), nil
 }
 
 func (sm libvirtSubnetManager) GetNetworkConfig(ctx context.Context) (*subnet.Config, error)
